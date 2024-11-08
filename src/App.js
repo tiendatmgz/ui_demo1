@@ -2,47 +2,70 @@ import { useEffect } from "react";
 import Nav from "./components/Nav";
 import Section from "./components/Section";
 import { getContents } from "./config/ConfigObject";
-import { gsap } from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 function App() {
-    useEffect(() => {
-        // gsap.utils.toArray('.number').map(el => {
-        //     gsap.to('.number', {
-        //         scrollTrigger: {
-        //             trigger: el,
-        //             start: 'top 20%',
-        //             markers: true,
-        //             pin: true,
-        //             // pinSpacing: false,
-        //             pinSpacer: false,
-        //             toggleActions: "play none none reverse"
-        //             // start:'',
+    gsap.registerPlugin(ScrollTrigger)
+
+    var contents = getContents();
+    useGSAP(() => {
+        // const parentsDiv = document.querySelectorAll('.section');
+        // const childsDiv = document.querySelectorAll('.number');
+        // const checkIfChildBottomMatchesParent = () => {
+        //     // Lấy tất cả các thẻ con
+        //     parentsDiv.forEach((parent, index) => {
+        //         const child = childsDiv[index];
+        //         // Lấy vị trí và kích thước của thẻ cha và thẻ con
+        //         const parentRect = parent.getBoundingClientRect();
+        //         const childRect = child.getBoundingClientRect();
+        //         // Kiểm tra nếu đáy thẻ con trùng với đáy thẻ cha
+        //         if (Math.abs(parentRect.bottom - childRect.bottom) <= 1) {
+        //             gsap.to(child, {
+        //                 duration: 0.5,
+        //                 ease: "slow(0.7,0.7,false)",
+        //                 y: -500
+        //             })
+        //             console.log(`Đáy thẻ con ${index + 1} trùng với đáy thẻ cha ${index + 1}.`);
+        //         } else {
+        //             console.log(`Đáy thẻ con ${index + 1} không trùng với đáy thẻ cha ${index + 1}.`);
         //         }
         //     })
-        // })
-        gsap.fromTo(
-            '.number1',
-            { position: 'absolute' }, // Vị trí bắt đầu
-            {
-                position: 'fixed', // Chuyển thành fixed khi cuộn
+
+        // }
+
+        // window.addEventListener('scroll', checkIfChildBottomMatchesParent)
+        gsap.utils.toArray('.number').forEach((el, index) => {
+
+            gsap.timeline().to(el, {
+                // x: 200,
                 scrollTrigger: {
-                    trigger: '.number1', // Phần tử theo dõi
-                    start: 'top 20%', // Bắt đầu khi phần tử ở 80% chiều cao màn hình
-                    end: 'bottom 10%', // Kết thúc khi phần tử thoát khỏi viewport
-                    scrub: true, // Cuộn mượt mà
-                    pin: true, // Ghim phần tử tại chỗ
+                    trigger: el,
+                    endTrigger: `.section0${index + 1}`,
+                    // scrub: true,
+                    markers: true,
+                    start: '0 20%',
+                    end: 'bottom 20%',
+                    // end: (() => {
+                    //     return '+=' + document.getElementsByClassName('section')[1].offsetHeight - document.getElementsByClassName('number02')[0].offsetHeight
+                    // }),
+                    pin: true,
                     pinSpacer: false,
-                    markers: true, // Hiển thị các marker để debug
-                },
-            }
-        );
+                    onLeave: ({ progress, direction, isActive }) => gsap.to(el, {
+                        duration: 0.5,
+                        ease: "back.in(2)",
+                        y: -250
+                    })
+
+                }
+            })
+        })
     }, []);
-    var contents = getContents();
     return (
         <div className="layout text-black bg-stone-100 relative ">
-            <Nav />
             <div className="w-full pt-44 pl-44 pr-5">
-                <p className="font-bold uppercase text-stone-400">from start to end</p>
+                <p className="font-bold uppercase text-stone-400 mb-24">from start to end</p>
                 {contents.map((content, index) =>
                     <Section key={index} content={content} />
                 )}
@@ -51,6 +74,7 @@ function App() {
                 <div className="col-span-4 h-full w-full items-center flex text-4xl col-start-3 font-bold">Hãy luôn theo đuổi phong cách riêng của bạn, vì thời trang không chỉ là những bộ trang phục mà là cách bạn thể hiện bản thân</div>
                 <div className="col-span-4 h-full w-full items-center flex text-4xl col-start-6 font-bold">"Thời trang là một hành trình không ngừng thay đổi – đón nhận sự sáng tạo và bền vững trong mỗi lựa chọn."</div>
             </div>
+            <Nav />
         </div >
     );
 };
