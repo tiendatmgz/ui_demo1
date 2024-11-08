@@ -11,45 +11,17 @@ function App() {
 
     var contents = getContents();
     useGSAP(() => {
-        // const parentsDiv = document.querySelectorAll('.section');
-        // const childsDiv = document.querySelectorAll('.number');
-        // const checkIfChildBottomMatchesParent = () => {
-        //     // Lấy tất cả các thẻ con
-        //     parentsDiv.forEach((parent, index) => {
-        //         const child = childsDiv[index];
-        //         // Lấy vị trí và kích thước của thẻ cha và thẻ con
-        //         const parentRect = parent.getBoundingClientRect();
-        //         const childRect = child.getBoundingClientRect();
-        //         // Kiểm tra nếu đáy thẻ con trùng với đáy thẻ cha
-        //         if (Math.abs(parentRect.bottom - childRect.bottom) <= 1) {
-        //             gsap.to(child, {
-        //                 duration: 0.5,
-        //                 ease: "slow(0.7,0.7,false)",
-        //                 y: -500
-        //             })
-        //             console.log(`Đáy thẻ con ${index + 1} trùng với đáy thẻ cha ${index + 1}.`);
-        //         } else {
-        //             console.log(`Đáy thẻ con ${index + 1} không trùng với đáy thẻ cha ${index + 1}.`);
-        //         }
-        //     })
+   
 
-        // }
-
-        // window.addEventListener('scroll', checkIfChildBottomMatchesParent)
         gsap.utils.toArray('.number').forEach((el, index) => {
 
             gsap.timeline().to(el, {
-                // x: 200,
                 scrollTrigger: {
                     trigger: el,
                     endTrigger: `.section0${index + 1}`,
-                    // scrub: true,
                     markers: true,
                     start: '0 20%',
                     end: 'bottom 20%',
-                    // end: (() => {
-                    //     return '+=' + document.getElementsByClassName('section')[1].offsetHeight - document.getElementsByClassName('number02')[0].offsetHeight
-                    // }),
                     pin: true,
                     pinSpacer: false,
                     onLeave: ({ progress, direction, isActive }) => gsap.to(el, {
